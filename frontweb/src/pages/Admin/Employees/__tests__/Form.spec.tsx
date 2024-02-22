@@ -13,7 +13,7 @@ afterAll(() => server.close());
 
 describe('Employee form create tests', () => {
 
-    test('should show toast and redirect when submit form correctly', async () => {
+    it('should show toast and redirect when submit form correctly', async () => {
 
         render(
             <Router history={history}>
@@ -41,7 +41,7 @@ describe('Employee form create tests', () => {
         expect(history.location.pathname).toEqual('/admin/employees');
     });
 
-    test('should show 3 error messages when just clicking submit', async () => {
+    it('should show 3 error messages when just clicking submit', async () => {
 
         render(
             <Router history={history}>
@@ -58,7 +58,7 @@ describe('Employee form create tests', () => {
         });
     });
 
-    test('should validate email syntax', async () => {
+    it('should validate email syntax', async () => {
 
         render(
             <Router history={history}>
@@ -78,7 +78,7 @@ describe('Employee form create tests', () => {
         });
     });
 
-    test('should clear error messages when filling out the form', async () => {
+    it('should clear error messages when filling out the form', async () => {
 
         render(
             <Router history={history}>
@@ -108,7 +108,7 @@ describe('Employee form create tests', () => {
         });
     });
 
-    test('should redirect when canceling', async () => {
+    it('should redirect when canceling', async () => {
 
         render(
             <Router history={history}>

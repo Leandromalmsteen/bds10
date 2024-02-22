@@ -17,7 +17,7 @@ jest.mock('util/auth', () => ({
 
 describe('Employee list any user tests', () => {
 
-    test('should render all employees', async () => {
+    it('should render all employees', async () => {
 
         render(
             <Router history={history}>
@@ -57,7 +57,7 @@ describe('Employee list ADMIN tests', () => {
         when(hasAnyRoles).calledWith(['ROLE_ADMIN']).mockReturnValue(true);
     });
 
-    test('should render create button', async () => {
+    it('should render create button', async () => {
 
         render(
             <Router history={history}>
@@ -85,7 +85,7 @@ describe('Employee list NOT ADMIN tests', () => {
         when(hasAnyRoles).calledWith(['ROLE_ADMIN']).mockReturnValue(false);
     });
 
-    test('should NOT render create button', async () => {
+    it('should NOT render create button', async () => {
 
         render(
             <Router history={history}>
