@@ -16,6 +16,8 @@ type UrlParams = {
 const Form = () => {
   const { employeeId } = useParams<UrlParams>();
 
+   const isEditing = employeeId !== 'create';
+
   const history = useHistory();
 
   const [selectCategories, setSelectCategories] = useState<Department[]>([]);
@@ -38,17 +40,19 @@ const Form = () => {
   }, []);
 
   useEffect(() => {
-    requestBackend({
-      url: `/employees/${employeeId},`,
-      withCredentials: true,
-    }).then((response) => {
-      const employee = response.data as Employee;
+    if (isEditing) {
+      requestBackend({
+        url: `/employees/${employeeId}`,
+        withCredentials: true,
+      }).then((response) => {
+        const employee = response.data as Employee;
 
-      setValue('name', employee.name);
-      setValue('email', employee.email);
-      setValue('department', employee.department);
-    });
-  }, [employeeId, setValue]);
+        setValue('name', employee.name);
+        setValue('email', employee.email);
+        setValue('department', employee.department);
+      });
+    }
+  }, [employeeId, isEditing, setValue]);
 
   const onSubmit = (formData: Employee) => {
     const data = {
@@ -56,8 +60,8 @@ const Form = () => {
     };
 
     const config: AxiosRequestConfig = {
-      method: 'POST',
-      url: '/employees',
+      method: isEditing ? 'PUT' : 'POST',
+      url: isEditing ? `/employees/${employeeId}` : '/employees',
       data,
       withCredentials: true,
     };
@@ -107,23 +111,24 @@ const Form = () => {
                   {...register('email', {
                     required: 'Campo obrigatório',
                     pattern: {
-                      value: /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i,
+                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                       message: 'Email inválido',
                     },
                   })}
                   type="text"
                   className={`form-control base-input ${
-                    errors.name ? 'is-invalid' : ''
+                    errors.email ? 'is-invalid' : ''
                   }`}
                   placeholder="Employeer Email"
                   name="email"
                   data-testid="email"
                 />
                 <div className="invalid-feedback d-block">
-                  {errors.name?.message}
+                  {errors.email?.message}
                 </div>
                 <div className="invalid-feedback d-block"></div>
               </div>
+
               <div className="margin-bottom-30 ">
                 <label htmlFor="department" className="d-none">
                   Departamento
