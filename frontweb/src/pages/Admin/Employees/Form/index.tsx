@@ -9,15 +9,7 @@ import { requestBackend } from 'util/requests';
 import { toast } from 'react-toastify';
 import Select from 'react-select';
 
-type UrlParams = {
-  employeeId: string;
-};
-
 const Form = () => {
-  const { employeeId } = useParams<UrlParams>();
-
-   const isEditing = employeeId !== 'create';
-
   const history = useHistory();
 
   const [selectCategories, setSelectCategories] = useState<Department[]>([]);
@@ -26,7 +18,6 @@ const Form = () => {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
     control,
   } = useForm<Employee>();
 
@@ -39,30 +30,11 @@ const Form = () => {
     });
   }, []);
 
-  useEffect(() => {
-    if (isEditing) {
-      requestBackend({
-        url: `/employees/${employeeId}`,
-        withCredentials: true,
-      }).then((response) => {
-        const employee = response.data as Employee;
-
-        setValue('name', employee.name);
-        setValue('email', employee.email);
-        setValue('department', employee.department);
-      });
-    }
-  }, [employeeId, isEditing, setValue]);
-
   const onSubmit = (formData: Employee) => {
-    const data = {
-      ...formData,
-    };
-
     const config: AxiosRequestConfig = {
-      method: isEditing ? 'PUT' : 'POST',
-      url: isEditing ? `/employees/${employeeId}` : '/employees',
-      data,
+      method: 'POST',
+      url: '/employees',
+      data: formData,
       withCredentials: true,
     };
 
@@ -142,7 +114,6 @@ const Form = () => {
                       {...field}
                       options={selectCategories}
                       classNamePrefix="product-crud-select"
-                      isMulti
                       getOptionLabel={(department: Department) =>
                         department.name
                       }
